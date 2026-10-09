@@ -1,0 +1,6 @@
+interface:
+  display_name: "Game Config Checker"
+  short_description: "Check RPG planning spreadsheets for broken monster, NPC, drop, skill, action, model, and VFX links."
+  default_prompt: "Use $game-config-checker to inspect a game configuration issue and report broken or suspicious table references."
+policy:
+  allow_implicit_invocation: true

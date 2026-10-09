@@ -1,0 +1,716 @@
+#app {
+  --background-color: #474747;
+  --content-color: #2f2f2f;
+  --font-color: #bdbdbd;
+  --hover-color: #09f;
+  --active-color: #fd942b;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  background-color: var(--background-color);
+  box-sizing: border-box;
+  padding: 10px;
+  color: var(--font-color);
+  animation: fade-in 0.3s;
+  animation-fill-mode: forwards;
+}
+
+/* 渐显 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 主布局 */
+.layout {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* 属性面板：让帧事件列表可占满剩余高度 */
+.layout .properties {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  gap: 0;
+}
+
+.layout .properties > * {
+  margin: 0;
+}
+
+.layout .properties > .property {
+  flex-shrink: 0;
+}
+
+/* 预览区和信息区之间的主分隔条 */
+.main-splitter {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 7px;
+  cursor: row-resize;
+  user-select: none;
+}
+
+.layout.horizontal-layout .main-splitter {
+  cursor: col-resize;
+}
+
+.main-splitter::after,
+.pane-splitter::after {
+  content: '';
+  position: absolute;
+  border-radius: 2px;
+  background-color: #666;
+  transition: background-color 0.15s;
+}
+
+.main-splitter::after {
+  left: 2px;
+  right: 2px;
+  top: 3px;
+  height: 1px;
+}
+
+.layout.horizontal-layout .main-splitter::after {
+  top: 2px;
+  bottom: 2px;
+  left: 3px;
+  width: 1px;
+  height: auto;
+}
+
+.main-splitter:hover::after,
+.main-splitter.resizing::after,
+.pane-splitter:hover::after,
+.pane-splitter.resizing::after {
+  background-color: var(--hover-color);
+}
+
+/* 信息区内的三个独立内容窗格 */
+.content-pane {
+  width: 100%;
+  min-height: 64px;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.options-pane {
+  height: 202px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.options-pane > .property,
+.hanging-points-pane > .property,
+.frame-events-pane > .property {
+  flex: 0 0 auto;
+  margin: 2px 0;
+}
+
+.hanging-points-pane {
+  height: 220px;
+}
+
+.frame-events-pane {
+  min-height: 64px;
+  flex: 1 1 120px;
+}
+
+/* 内容窗格之间的分隔条 */
+.pane-splitter {
+  position: relative;
+  width: 100%;
+  height: 7px;
+  flex: 0 0 7px;
+  cursor: row-resize;
+  user-select: none;
+}
+
+.pane-splitter::after {
+  left: calc(50% - 18px);
+  top: 3px;
+  width: 36px;
+  height: 1px;
+}
+
+/* 预览区 */
+.view {
+  width: 100%;
+  min-height: 0;
+  background-color: var(--content-color);
+  position: relative;
+  flex: 1;
+}
+
+/* 画布 */
+.canvas {
+  width: 100%;
+  height: 100%;
+  background-color: var(--content-color);
+}
+
+/* 版本号 */
+.version {
+  height: 16px;
+  opacity: 0.3;
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  line-height: 16px;
+  font-size: 11px;
+  color: var(--font-color);
+  user-select: none;
+}
+
+/* 按钮容器 */
+.buttons {
+  height: 16px;
+  opacity: 0.5;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  display: flex;
+  flex-direction: row;
+}
+
+/* 按钮容器 > 子元素 */
+.buttons > * {
+  margin-right: 5px;
+}
+
+/* 信息,按钮 */
+.info,
+.button {
+  width: 16px;
+  height: 16px;
+  color: var(--font-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* 信息,按钮:虚指 */
+.info:hover,
+.button:hover {
+  color: var(--hover-color);
+}
+
+/* 按钮:激活 */
+.button:active {
+  color: var(--active-color);
+}
+
+/* 信息,按钮 图标 */
+.info .icon,
+.button .icon {
+  width: 13px;
+  height: 13px;
+}
+
+/* 位置 */
+.position {
+  height: 13px;
+  opacity: 0.5;
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  display: flex;
+  flex-direction: row;
+}
+
+/* 位置 文本 */
+.position .label {
+  margin-right: 2px;
+  line-height: 12px;
+  font-size: 11px;
+  user-select: none;
+}
+
+/* 位置 按钮 */
+.position .button {
+  width: 13px;
+  height: 13px;
+}
+
+/* 位置 按钮 图标 */
+.position .button .icon {
+  width: 12px;
+  height: 12px;
+}
+
+/* 颜色 */
+.color {
+  height: 14px;
+  opacity: 1;
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  display: flex;
+  flex-direction: row;
+}
+
+/* 颜色 子元素 */
+.color * {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* 动画进度条 */
+.timeline {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: min(720px, calc(100% - 24px));
+  min-height: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.45);
+  box-sizing: border-box;
+  z-index: 2;
+  user-select: none;
+}
+
+.timeline-time {
+  flex: 0 0 auto;
+  min-width: 82px;
+  font-size: 11px;
+  line-height: 12px;
+  color: #ddd;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.download-action-time-button {
+  width: 100%;
+  height: 21px;
+  padding: 0 8px;
+  border: 1px solid #666;
+  border-radius: 3px;
+  background-color: #474747;
+  color: var(--font-color);
+  cursor: pointer;
+}
+
+.download-action-time-button:hover:not(:disabled) {
+  border-color: var(--hover-color);
+  color: var(--hover-color);
+}
+
+.download-action-time-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.copy-field-content {
+  gap: 4px;
+  min-width: 0;
+}
+
+.copy-field-content select {
+  min-width: 0;
+}
+
+.copy-inline-button,
+.copy-value-button {
+  height: 21px;
+  border: 1px solid #666;
+  border-radius: 3px;
+  background-color: #474747;
+  color: var(--font-color);
+  cursor: pointer;
+}
+
+.copy-inline-button {
+  min-width: 28px !important;
+  flex: 0 0 28px !important;
+  padding: 0;
+}
+
+.copy-value-button {
+  width: 100%;
+  min-width: 0;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+
+.copy-inline-button:hover:not(:disabled),
+.copy-value-button:hover:not(:disabled) {
+  border-color: var(--hover-color);
+  color: var(--hover-color);
+}
+
+.copy-inline-button:disabled,
+.copy-value-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.copy-value-text {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copy-value-icon {
+  margin-left: 5px;
+  flex: 0 0 auto;
+}
+
+.animation-copy-content {
+  gap: 4px;
+  min-width: 0;
+}
+
+.animation-copy-content input {
+  min-width: 0;
+}
+
+.animation-copy-content button {
+  min-width: 44px !important;
+  flex: 0 0 auto !important;
+  padding: 0 7px;
+  border: 1px solid #666;
+  border-radius: 3px;
+  background-color: #474747;
+  color: var(--font-color);
+  cursor: pointer;
+}
+
+.animation-copy-content button:hover:not(:disabled) {
+  border-color: var(--hover-color);
+  color: var(--hover-color);
+}
+
+.animation-copy-content button:disabled,
+.animation-copy-content input:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.animation-edit-message {
+  flex: 0 0 auto;
+  margin: 2px 5px 4px;
+  color: #ff8b7b;
+  font-size: 11px;
+  line-height: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.animation-edit-message.success {
+  color: #72d572;
+}
+
+.timeline-frame,
+.timeline-fps {
+  flex: 0 0 auto;
+  color: #ddd;
+  font-size: 11px;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.timeline-frame {
+  min-width: 52px;
+  text-align: center;
+}
+
+.timeline-fps {
+  opacity: 0.75;
+}
+
+.timeline-button {
+  width: 24px;
+  height: 22px;
+  flex: 0 0 24px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #eee;
+  font-size: 10px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.timeline-button:hover {
+  background: rgba(9, 153, 255, 0.65);
+}
+
+.timeline-play {
+  font-size: 12px;
+}
+
+.timeline-slider {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 14px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--hover-color);
+}
+
+@media (max-width: 560px) {
+  .timeline-time,
+  .timeline-fps {
+    display: none;
+  }
+}
+
+/* 帧事件浮层提示 */
+.frame-event-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 60px;
+  transform: translateX(-50%);
+  max-width: calc(100% - 16px);
+  padding: 4px 10px;
+  border-radius: 3px;
+  background-color: rgba(9, 153, 255, 0.85);
+  color: #fff;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  user-select: none;
+  animation: frame-event-fade 1.5s ease-out forwards;
+  z-index: 1;
+}
+
+.copy-feedback-toast {
+  position: absolute;
+  left: 50%;
+  top: 26px;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border-radius: 3px;
+  background-color: rgba(9, 153, 255, 0.88);
+  color: #fff;
+  font-size: 12px;
+  line-height: 18px;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+@keyframes frame-event-fade {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 帧事件记录 */
+.frame-events-log {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  border: 1px solid #555;
+  border-radius: 3px;
+  background-color: #333;
+  box-sizing: border-box;
+}
+
+/* 挂点列表：始终占满挂点窗格，内容过多时独立滚动 */
+.hanging-points-title {
+  flex: 0 0 auto;
+}
+
+.hanging-points-list {
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid #555;
+  border-radius: 3px;
+  background-color: #333;
+  box-sizing: border-box;
+}
+
+.hanging-points-empty {
+  padding: 8px;
+  color: #888;
+  font-size: 11px;
+  text-align: center;
+  user-select: none;
+}
+
+.hanging-point-item {
+  padding: 4px 6px;
+  border-bottom: 1px solid #444;
+  font-size: 11px;
+}
+
+.hanging-point-item:last-child {
+  border-bottom: none;
+}
+
+.hanging-point-header {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.hanging-point-name {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  color: #09f;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hanging-point-position {
+  margin-left: 6px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.hanging-point-meta {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #888;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.frame-events-empty {
+  padding: 8px;
+  font-size: 11px;
+  color: #888;
+  text-align: center;
+  user-select: none;
+}
+
+.frame-event-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 6px;
+  font-size: 11px;
+  border-bottom: 1px solid #444;
+}
+
+.frame-event-item:last-child {
+  border-bottom: none;
+}
+
+.frame-event-name {
+  color: #09f;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.frame-event-meta {
+  margin-left: 6px;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.frame-event-clear {
+  height: 21px;
+  padding: 0 8px;
+  border: 1px solid #666;
+  border-radius: 3px;
+  background-color: #474747;
+  color: var(--font-color);
+  font-size: 11px;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.frame-event-clear:hover {
+  border-color: var(--hover-color);
+  color: var(--hover-color);
+}
+
+/* CSS @media 在 Shadow DOM 中无法得到期望结果 */
+
+/* .layout {
+  flex-direction: column;
+}
+
+.properties {
+  width: 100%;
+  margin-top: 5px;
+  margin-left: 0;
+  display: flex;
+} */
+
+/* @media screen and (min-width: 800px) {
+  @media screen and (min-width: 350px) {
+    .layout {
+      flex-direction: row;
+    }
+    .properties {
+      width: 265px;
+      margin-top: 0;
+      margin-left: 5px;
+      display: flex;
+    }
+  }
+  @media screen and (max-width: 349px) {
+    .properties {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-height: 360px) {
+  @media screen and (min-width: 350px) {
+    .layout {
+      flex-direction: row;
+    }
+    .properties {
+      width: 265px;
+      margin-top: 0;
+      margin-left: 5px;
+      display: flex;
+    }
+  }
+  @media screen and (max-width: 349px) {
+    .properties {
+      display: none;
+    }
+  }
+} */

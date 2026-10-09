@@ -1,0 +1,165 @@
+<div class="app-shell" tabindex="0">
+  <aside class="scene-sidebar">
+    <header>
+      <h1>场景推进预览</h1>
+      <p id="sceneCount">正在读取场景…</p>
+    </header>
+    <input id="sceneSearch" type="search" placeholder="搜索场景名称">
+    <div id="sceneList" class="scene-list"></div>
+  </aside>
+
+  <main class="preview-column">
+    <div class="toolbar">
+      <button id="reloadBtn" type="button">重新加载</button>
+      <button id="resetBtn" type="button">回到出生点</button>
+      <button id="playBtn" type="button">自动推进</button>
+      <button id="pauseBtn" type="button">暂停动效</button>
+      <button id="saveSettingsBtn" type="button">保存参数</button>
+      <button id="resetSettingsBtn" type="button">恢复默认</button>
+      <span id="statusText">请选择场景</span>
+    </div>
+    <div id="viewport" class="viewport" tabindex="0">
+      <img id="previewImage" alt="场景预览">
+      <div id="emptyState" class="empty-state">从左侧选择一个场景开始预览</div>
+      <div id="debugOverlay" class="debug-overlay"></div>
+      <div id="playerMarker" class="player-marker">
+        <span>角色</span>
+        <div id="colliderMarker" class="collider-marker"></div>
+      </div>
+      <div class="viewport-label">固定镜头范围</div>
+    </div>
+    <div class="control-hint">点击画面后使用 W/A/S/D 或方向键移动，Shift 加速</div>
+    <div id="layerStrip" class="layer-strip"></div>
+  </main>
+
+  <aside class="settings-sidebar">
+    <section class="avg-section">
+      <h2>AVG 演出（可选）</h2>
+      <label class="check"><input id="avgEnabled" type="checkbox">启用 AVG 镜头调度</label>
+      <label class="stack">Animation.xlsx 路径<input id="avgPath" type="text" value="D:\client\configtable\Animation.xlsx"></label>
+      <button id="avgReloadBtn" type="button">刷新 AVG 列表</button>
+      <select id="avgSelect"><option value="">选择 AnimeID</option></select>
+      <div class="avg-buttons">
+        <button id="avgPlayBtn" type="button">播放 AVG</button>
+        <button id="avgReplayBtn" type="button">从头重播</button>
+      </div>
+      <input id="avgTimeline" class="avg-timeline" type="range" min="0" max="0" value="0" step="0.01">
+      <div id="avgTime" class="avg-time">—</div>
+      <div id="avgEvent" class="avg-event">未读取 AVG 配置</div>
+    </section>
+    <section>
+      <h2>角色控制</h2>
+      <label>移动速度 <input id="moveSpeed" type="number" value="600" min="10" step="10"></label>
+      <label>碰撞体宽度 <input id="colliderWidth" type="number" value="140" min="1"></label>
+      <label>碰撞体高度 <input id="colliderHeight" type="number" value="180" min="1"></label>
+      <label>碰撞体 X 偏移 <input id="colliderOffsetX" type="number" value="0"></label>
+      <label>碰撞体 Y 偏移 <input id="colliderOffsetY" type="number" value="75"></label>
+      <label class="check"><input id="showCollider" type="checkbox" checked>显示碰撞体</label>
+      <label class="check"><input id="enableForegroundOcclusion" type="checkbox" checked>启用场景遮挡图虚化（与范围框显示无关）</label>
+    </section>
+    <section>
+      <h2>固定镜头</h2>
+      <label>分辨率预设
+        <select id="resolutionPreset">
+          <option value="design">设计分辨率（700×1525）</option>
+          <optgroup label="Apple 手机">
+            <option value="iphone-14-pro">iPhone 14 Pro（393×852）</option>
+            <option value="iphone-pro-max-plus">iPhone 12/13 Pro Max；14 Plus（428×926）</option>
+            <option value="iphone-standard-pro">iPhone 12；13；14；12/13 Pro（390×844）</option>
+            <option value="iphone-x-mini">iPhone X；XS；11 Pro；12/13 Mini（375×812）</option>
+            <option value="iphone-xr-11">iPhone XR；11（414×896）</option>
+          </optgroup>
+          <optgroup label="Apple 平板">
+            <option value="ipad-10-2">iPad 10.2（1620×2160）</option>
+            <option value="ipad-air-10-9">iPad Air 10.9（1640×2360）</option>
+            <option value="ipad-pro-10-5">iPad Pro 10.5（1668×2224）</option>
+          </optgroup>
+          <optgroup label="Android 手机">
+            <option value="oppo-reno-2">OPPO Reno 2（360×800）</option>
+            <option value="huawei-nova-5">HUAWEI Nova 5（360×780）</option>
+            <option value="honor-x8">HONOR X8（360×796）</option>
+            <option value="huawei-nova-8i">HUAWEI Nova 8i（360×792）</option>
+            <option value="huawei-mate-40-pro">HUAWEI Mate 40 Pro（448×924）</option>
+            <option value="huawei-mate-30-pro">HUAWEI Mate30 Pro（392×800）</option>
+            <option value="xiaomi-redmi-8">Xiaomi Redmi 8（360×760）</option>
+            <option value="sony-xperia-5">Sony Xperia 5（360×840）</option>
+            <option value="oppo-a77">OPPO A77（360×806）</option>
+            <option value="nokia-c2">Nokia C2（360×720）</option>
+            <option value="asus-rog-phone-6">Asus ROG Phone 6（360×816）</option>
+            <option value="lenovo-legion-2-pro">Lenovo Legion 2 Pro（360×820）</option>
+          </optgroup>
+          <option value="custom">自定义</option>
+        </select>
+      </label>
+      <label>宽度 <input id="viewportWidth" type="number" value="700" min="128"></label>
+      <label>高度 <input id="viewportHeight" type="number" value="1525" min="128"></label>
+      <label>Ortho Height <input id="orthoHeight" type="number" value="762.5" min="1" step="0.5"></label>
+      <div id="resolutionInfo" class="resolution-info">设备 700 × 1525 · 实际世界视野 700.0 × 1525.0</div>
+      <label>当前阶段
+        <select id="currentStage">
+          <option value="1st">1st</option>
+          <option value="2nd">2nd</option>
+          <option value="3rd">3rd</option>
+          <option value="4th">4th</option>
+          <option value="loop">Loop</option>
+        </select>
+      </label>
+      <label class="check"><input id="respectBounds" type="checkbox" checked>遵循游戏镜头边界</label>
+    </section>
+    <section>
+      <h2>辅助范围显示（可选）</h2>
+      <label class="check group-toggle"><input id="showAuxiliaryRanges" type="checkbox">显示辅助范围</label>
+      <div class="option-list">
+        <label class="check"><input id="showCameraFrame" type="checkbox" checked>当前镜头框</label>
+        <label class="check"><input id="showExitBoundaries" type="checkbox" checked>离开场景线</label>
+        <label class="check"><input id="showSpawnBoundaries" type="checkbox" checked>召唤怪物线</label>
+        <label class="check"><input id="showCameraBoundaries" type="checkbox" checked>镜头限制线</label>
+        <label class="check"><input id="showMoveBoundaries" type="checkbox" checked>移动限制线</label>
+        <label class="check"><input id="showSceneBounds" type="checkbox">场景内容边界</label>
+      </div>
+    </section>
+    <section>
+      <h2>各层级大小（可选）</h2>
+      <label class="check group-toggle"><input id="showLayerBounds" type="checkbox">显示层级范围</label>
+      <div id="layerBoundOptions" class="option-list"><span class="option-empty">选择场景后显示层级选项</span></div>
+    </section>
+    <section>
+      <h2>渲染层级</h2>
+      <div class="render-axis-caption">画面前方（高层级）</div>
+      <div id="renderLayerAxis" class="render-layer-axis"><span class="option-empty">选择场景后显示渲染层级</span></div>
+      <div class="render-axis-caption bottom">画面后方（低层级）</div>
+    </section>
+    <section>
+      <h2>特殊功能检测范围（可选）</h2>
+      <label class="check group-toggle"><input id="showFeatureRanges" type="checkbox">显示检测范围</label>
+      <div class="option-list">
+        <label class="check"><input id="showEffectRanges" type="checkbox" checked>特效激活</label>
+        <label class="check"><input id="showOcclusionRanges" type="checkbox" checked>虚化感知框（全部层级）</label>
+        <label class="check"><input id="showTriggerRanges" type="checkbox" checked>触发器</label>
+        <label class="check"><input id="showOpacityBarrierRanges" type="checkbox" checked>透明障碍</label>
+        <label class="check"><input id="showBarrierRanges" type="checkbox" checked>环境碰撞</label>
+      </div>
+      <div class="debug-legend">
+        <span class="legend-effect">特效激活</span>
+        <span class="legend-occlusion">场景遮挡图虚化</span>
+        <span class="legend-trigger">触发器</span>
+        <span class="legend-barrier">碰撞/障碍</span>
+      </div>
+    </section>
+    <section>
+      <h2>实时状态</h2>
+      <dl id="runtimeStats" class="runtime-stats">
+        <dt>角色坐标</dt><dd>—</dd>
+        <dt>镜头坐标</dt><dd>—</dd>
+        <dt>激活特效</dt><dd>—</dd>
+        <dt>未激活特效</dt><dd>—</dd>
+        <dt>虚化前景</dt><dd>—</dd>
+        <dt>最低透明度</dt><dd>—</dd>
+      </dl>
+    </section>
+    <section>
+      <h2>场景信息</h2>
+      <div id="sceneInfo" class="scene-info">尚未选择场景</div>
+    </section>
+  </aside>
+</div>

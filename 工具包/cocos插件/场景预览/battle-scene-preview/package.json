@@ -1,0 +1,55 @@
+{
+  "package_version": 2,
+  "version": "0.3.4",
+  "name": "battle-scene-preview",
+  "description": "Battle scene progression preview for Cocos Creator",
+  "author": "Codex",
+  "editor": ">=3.8.6",
+  "main": "./dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.17.1",
+    "typescript": "^4.9.5"
+  },
+  "panels": {
+    "default": {
+      "title": "场景推进预览",
+      "type": "dockable",
+      "main": "dist/panels/default",
+      "size": {
+        "min-width": 1040,
+        "min-height": 680,
+        "width": 1440,
+        "height": 900
+      }
+    }
+  },
+  "contributions": {
+    "scene": {
+      "script": "./dist/scene.js"
+    },
+    "menu": [
+      {
+        "path": "Develop/场景工具",
+        "label": "场景推进预览",
+        "message": "open-panel"
+      }
+    ],
+    "messages": {
+      "open-panel": { "methods": ["openPanel"] },
+      "list-scenes": { "methods": ["listScenes"] },
+      "list-avg-configs": { "methods": ["listAvgConfigs"] },
+      "load-settings": { "methods": ["loadSettings"] },
+      "save-settings": { "methods": ["saveSettings"] },
+      "start-preview": { "methods": ["startPreview"] },
+      "render-frame": { "methods": ["renderFrame"] },
+      "stop-preview": { "methods": ["stopPreview"] }
+    }
+  }
+}
